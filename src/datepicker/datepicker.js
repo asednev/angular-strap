@@ -257,6 +257,10 @@ angular.module('mgcrea.ngStrap.datepicker', [
           $timeout(function () {
             // if $datepicker is no longer showing, don't setup events
             if (!$datepicker.$isShown) return;
+            // Elements that have both a datepicker and tooltip can have duplicate event handlers when both
+            // the datepicker and tooltip are open, since datepickers inherit tooltip methods.
+            // Make sure we don't trigger $onMouseDown multiple times for the same event by removing any existing copies of this event handler.
+            $datepicker.$element.off(isTouch ? 'touchstart' : 'mousedown', $datepicker.$onMouseDown);
             $datepicker.$element.on(isTouch ? 'touchstart' : 'mousedown', $datepicker.$onMouseDown);
             if (options.keyboard) {
               element.on('keydown', $datepicker.$onKeyDown);
